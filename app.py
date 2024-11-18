@@ -22,7 +22,7 @@ client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://192.168.0.105:5000//map"
+    redirect_uri="http://127.0.0.1:5000/map"
 )
 
 # Google login required decorator
@@ -386,7 +386,14 @@ def get_stored_data():
     return jsonify(response)
 
 if __name__ == '__main__':
-    # app.run(debug=True)
+    app.run(debug=True)
     # webview.start()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000, debug=True)
+
+# def start_webview():
+#     window = webview.create_window('Wind Wave Sense', app)
+#     webview.start()
+    
+# if __name__ == '__main__':
+#     start_webview()
 

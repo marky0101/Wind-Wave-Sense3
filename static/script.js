@@ -182,50 +182,36 @@ function updateWindWaveData(data) {
     document.getElementById('windPeriod').innerText = data.wind_wave_period || 'N/A';
 }
 
-// Analyze safety based on the wind wave data
 function analyzeSafety(windHeight, windDirection, windPeriod) {
-    let analysis = '';
-    let isSafe = true;
+    // Show placeholder message
+    const placeholder = document.getElementById('placeholder');
+    placeholder.style.display = 'block';
 
-    // Define safety thresholds
-    const heightThreshold = 2; // meters
-    const periodThreshold = 5; // seconds
+    // Create the analysis prompt
+    const prompt = `
+        Analyze the following conditions:
+        Wind Wave Height: ${windHeight} meters,
+        Wind Wave Direction: ${windDirection || "N/A"} degrees,
+        Wind Wave Period: ${windPeriod || "N/A"} seconds.
+    `;
 
-    // Analyze wind direction
-    if (windDirection) {
-        const direction = getWindDirection(windDirection);
-        analysis += `The wind is coming from the <strong>${direction}</strong> direction.<br>`;
-    } else {
-        analysis += `Wind direction data is not available.<br>`;
-    }
+    // Set the iframe's source to the analysis URL
+    const iframeSrc = `https://barmmdrr.com/connect_ai/message?prompt=${encodeURIComponent(prompt)}`;
+    const iframe = document.getElementById('nlpIframe');
+    iframe.src = iframeSrc;
 
-    // Analyze wind wave height
-    if (windHeight > heightThreshold) {
-        analysis += `Warning: The wind wave height is <strong>${windHeight} meters</strong>, which is considered dangerous for sailing.<br>`;
-        isSafe = false;
-    } else {
-        analysis += `The wind wave height of <strong>${windHeight} meters</strong> is safe for sailing.<br>`;
-    }
+    // Hide the placeholder when the iframe content is loaded
+    iframe.onload = function () {
+        placeholder.style.display = 'none';
+    };
 
-    // Analyze wind wave period
-    if (windPeriod < periodThreshold) {
-        analysis += `<strong>Caution:</strong> The wind wave period is <strong>${windPeriod} seconds</strong>, indicating turbulent conditions.<br>`;
-        isSafe = false;
-    } else {
-        analysis += `The wind wave period of <strong>${windPeriod} seconds</strong> is safe for sailing.<br>`;
-    }
-
-    // Final safety summary
-    if (isSafe) {
-        analysis += `<strong>Overall Result:</strong> Conditions are safe for sailing.<br>`;
-    } else {
-        analysis += `<strong>Overall Result:</strong> Conditions are not safe for sailing.<br>`;
-    }
-
-    // Update the NLP analysis output with bold formatting
-    document.getElementById('nlpOutput').innerHTML = analysis; // Use innerHTML to render HTML content
-
+    // Optional: Handle iframe load errors (if necessary)
+    iframe.onerror = function () {
+        placeholder.textContent = 'Failed to load data. Please try again later.';
+        placeholder.style.color = 'red';
+    };
 }
+
 
 // Function to convert wind direction in degrees to compass direction
 function getWindDirection(degrees) {
