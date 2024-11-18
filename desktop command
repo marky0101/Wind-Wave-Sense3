@@ -1,0 +1,3 @@
+desktop:
+
+pyinstaller --noconfirm --onefile --windowed --icon "C:\Users\marky\flask_app\static\assets\logo.ico" --add-data "C:\Users\marky\flask_app\fetch.py;." --add-data "C:\Users\marky\flask_app\client_secret.json;." --add-data "C:\Users\marky\flask_app\templates;templates/" --add-data "C:\Users\marky\flask_app\static;static/"  "C:\Users\marky\flask_app\app.py"
